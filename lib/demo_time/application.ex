@@ -14,6 +14,7 @@ defmodule DemoTime.Application do
         DemoTime.Repo,
         {Phoenix.PubSub, name: DemoTime.PubSub},
         DemoTimeWeb.Endpoint,
+        {DemoTime.Demo4, %{topic: :events, mod: DemoTime.Worker, fun: :consume}},
         %{id: :pg, start: {:pg, :start_link, []}}
       ] ++ Enum.map(@topics, &{DemoTime.Demo1, topic: &1})
 
