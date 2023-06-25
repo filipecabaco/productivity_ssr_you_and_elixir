@@ -54,7 +54,7 @@ defmodule DemoTime.Application do
       Bumblebee.Text.zero_shot_classification(
         labeller_model_info,
         labeller_tokenizer,
-        ~w(technology culture travel shopping politics finance sports),
+        ~w(technology culture travel shopping politics finance sports food),
         compile: compile,
         defn_options: defn_options
       )

@@ -38,3 +38,4 @@ Mnesia.s0@127.0.0.1
 Mnesia.s1@127.0.0.1
 Mnesia.s2@127.0.0.1
 Mnesia.s3@127.0.0.1
+.db

@@ -4,17 +4,11 @@
 PORT=4000 iex --name s0@127.0.0.1 -S mix phx.server
 PORT=4001 iex --name s1@127.0.0.1 -S mix phx.server
 PORT=4002 iex --name s2@127.0.0.1 -S mix phx.server
-PORT=4003 iex --name s3@127.0.0.1 -S mix phx.server
 ```
 
 ## Demo 1
 
 ```
-PORT=4000 iex --name s1@127.0.0.1 -S mix phx.server
-PORT=4001 iex --name s2@127.0.0.1 -S mix phx.server
-PORT=4002 iex --name s3@127.0.0.1 -S mix phx.server
-
-# From any machine
 DemoTime.Demo1.broadcast(:message_queue, "test")
 ```
 
@@ -48,6 +42,6 @@ DemoTime.Demo3.go()
 ```
 DemoTime.Demo4.broadcast(:events, %{event: %{important: true}})
 DemoTime.Demo4.broadcast(:events, %{event: %{important: false}})
- DemoTime.Demo4.fetch_since(:events, DateTime.utc_now |> DateTime.add(-1, :day) |> DateTime.to_unix(:microsecond))
- DemoTime.Demo4.replay_since(:events, DateTime.utc_now |> DateTime.add(-1, :day) |> DateTime.to_unix(:microsecond))
+DemoTime.Demo4.fetch_since(:events, DateTime.utc_now |> DateTime.add(-1, :day) |> DateTime.to_unix(:microsecond))
+DemoTime.Demo4.replay_since(:events, DateTime.utc_now |> DateTime.add(-1, :day) |> DateTime.to_unix(:microsecond))
 ```

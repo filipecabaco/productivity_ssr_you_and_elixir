@@ -71,6 +71,7 @@ defmodule DemoTimeWeb.Live.Live3 do
               "politics" -> "🗳️ - "
               "finance" -> "💰 - "
               "sports" -> "⚽️ - "
+              "sports" -> "🍔 - "
               nil -> "🤷‍♂️ - "
               _ -> "⏳ - "
             end %>
@@ -119,6 +120,8 @@ defmodule DemoTimeWeb.Live.Live3 do
   end
 
   def handle_info(%{topic: "messages", event: "new_message", payload: {_, message}}, socket) do
+    GenServer.cast(self(), {:ml, message})
+
     {:noreply, stream_insert(socket, :messages, message)}
   end
 
