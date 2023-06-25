@@ -48,7 +48,10 @@ defmodule DemoTime.MixProject do
       {:telemetry_poller, "~> 1.0"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
-      {:tesla, "~> 1.7"}
+      {:tesla, "~> 1.7"},
+      {:avatarex, "~> 0.2.0"},
+      {:bumblebee, "~> 0.3.0"},
+      {:exla, "~> 0.5.0"}
     ]
   end
 

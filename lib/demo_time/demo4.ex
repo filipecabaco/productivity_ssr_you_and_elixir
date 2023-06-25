@@ -8,10 +8,7 @@ defmodule DemoTime.Demo4 do
 
   ## SETUP GENSERVER
   def start_link(%{topic: topic, mod: mod, fun: fun}),
-    do:
-      GenServer.start_link(__MODULE__, %{topic: topic, mod: mod, fun: fun},
-        name: :"broadcast_#{topic}"
-      )
+    do: GenServer.start_link(__MODULE__, %{topic: topic, mod: mod, fun: fun}, name: :"broadcast_#{topic}")
 
   @impl true
   def init(state), do: {:ok, state, {:continue, :connect_to_nodes}}

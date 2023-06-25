@@ -18,12 +18,10 @@ defmodule DemoTimeWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    live "/live1", Live.Live1
+    live "/live2", Live.Live2
+    live "/live3", Live.Live3
   end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", DemoTimeWeb do
-  #   pipe_through :api
-  # end
 
   # Enable LiveDashboard in development
   if Application.compile_env(:demo_time, :dev_routes) do
