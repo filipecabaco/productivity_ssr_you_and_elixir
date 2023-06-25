@@ -40,27 +40,29 @@ defmodule DemoTimeWeb.Live.Live2 do
   def render(assigns) do
     ~H"""
     <div class="flex flex-col h-[80vh]">
-      <div
-        class="grow-1 h-full overflow-scroll border-2 shadow rounded p-4 border-slate-200"
-        phx-update="stream"
-        id="messages"
-        phx-hook="AutoScroll"
-      >
-        <div :for={{dom_id, %{message: message}} <- @streams.messages} id={dom_id}>
-          <%= message %>
+      <div class="flex grow-1 h-full">
+        <div>
+          <ul>
+            <li :for={%{avatar: avatar, online_at: online_at} <- @users} class="flex items-center w-28">
+              <img src={"data:image/png;base64,#{avatar}"} class="h-8 w-8" />
+              <div><%= online_at %></div>
+            </li>
+          </ul>
+        </div>
+        <div
+          class="grow-1 h-full w-full overflow-scroll border-2 shadow rounded p-4 border-slate-200"
+          phx-update="stream"
+          id="messages"
+          phx-hook="AutoScroll"
+        >
+          <div :for={{dom_id, %{message: message}} <- @streams.messages} id={dom_id}>
+            <%= message %>
+          </div>
         </div>
       </div>
       <.simple_form :let={f} for={%{"message" => ""}} phx-submit="new_message">
         <.input field={f["message"]} />
       </.simple_form>
-      <div class="top-30 left-2 fixed">
-        <ul>
-          <li :for={%{avatar: avatar, online_at: online_at} <- @users} class="flex items-center">
-            <img src={"data:image/png;base64,#{avatar}"} class="h-8 w-8" />
-            <div><%= online_at %></div>
-          </li>
-        </ul>
-      </div>
       <button
         class="right-4 bottom-4 fixed bg-brand hover:bg-brand-light rounded p-2 text-white font-bold"
         phx-click="chaos"
