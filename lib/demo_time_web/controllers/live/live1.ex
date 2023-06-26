@@ -51,10 +51,7 @@ defmodule DemoTimeWeb.Live.Live1 do
     {:noreply, socket}
   end
 
-  def handle_info(
-        %{topic: "messages", event: "new_message", payload: {id, _}},
-        %{socket: id} = socket
-      ) do
+  def handle_info(%{topic: "messages", event: "new_message", payload: {id, _}}, %{socket: id} = socket) do
     {:noreply, socket}
   end
 
@@ -63,15 +60,10 @@ defmodule DemoTimeWeb.Live.Live1 do
   end
 
   def handle_info(%{topic: "messages", event: "chaos"}, socket) do
-    message = %{
-      id: DateTime.utc_now(),
-      message: Enum.random(@sentences)
-    }
-
+    message = %{id: DateTime.utc_now(), message: Enum.random(@sentences)}
     DemoTimeWeb.Endpoint.broadcast("messages", "new_message", {socket.id, message})
 
     :timer.sleep(100)
-
     DemoTimeWeb.Endpoint.broadcast("messages", "chaos", nil)
 
     socket =

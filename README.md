@@ -1,9 +1,9 @@
 # DemoTime
 
 ```
-PORT=4000 iex --name s0@127.0.0.1 -S mix phx.server
-PORT=4001 iex --name s1@127.0.0.1 -S mix phx.server
-PORT=4002 iex --name s2@127.0.0.1 -S mix phx.server
+ENABLE_SAUCE=false PORT=4000 iex --name s0@127.0.0.1 -S mix
+ENABLE_SAUCE=false PORT=4001 iex --name s1@127.0.0.1 -S mix
+ENABLE_SAUCE=false PORT=4002 iex --name s2@127.0.0.1 -S mix
 ```
 
 ## Demo 1
@@ -44,4 +44,12 @@ DemoTime.Demo4.broadcast(:events, %{event: %{important: true}})
 DemoTime.Demo4.broadcast(:events, %{event: %{important: false}})
 DemoTime.Demo4.fetch_since(:events, DateTime.utc_now |> DateTime.add(-1, :day) |> DateTime.to_unix(:microsecond))
 DemoTime.Demo4.replay_since(:events, DateTime.utc_now |> DateTime.add(-1, :day) |> DateTime.to_unix(:microsecond))
+```
+
+## Live Demos
+
+```
+ENABLE_SAUCE=true PORT=4000 iex --name s0@127.0.0.1 -S mix phx.server
+ENABLE_SAUCE=true PORT=4001 iex --name s1@127.0.0.1 -S mix phx.server
+ENABLE_SAUCE=true PORT=4002 iex --name s2@127.0.0.1 -S mix phx.server
 ```

@@ -10,15 +10,10 @@ defmodule DemoTimeWeb.Live.Live3 do
 
   def mount(_params, _session, socket) do
     DemoTimeWeb.Endpoint.subscribe("messages")
+    Phoenix.PubSub.subscribe(DemoTime.PubSub, "presence")
 
     if connected?(socket) do
-      Phoenix.PubSub.subscribe(DemoTime.PubSub, "presence")
-
-      online_at =
-        DateTime.utc_now()
-        |> DateTime.truncate(:second)
-        |> Calendar.strftime("%H:%M:%S")
-
+      online_at = DateTime.utc_now() |> Calendar.strftime("%H:%M:%S")
       Presence.track(socket.transport_pid, "presence", socket.id, %{online_at: online_at})
       Monitor.monitor(socket.transport_pid, socket.id)
     end
@@ -71,7 +66,7 @@ defmodule DemoTimeWeb.Live.Live3 do
               "politics" -> "🗳️ - "
               "finance" -> "💰 - "
               "sports" -> "⚽️ - "
-              "sports" -> "🍔 - "
+              "food" -> "🍔 - "
               nil -> "🤷‍♂️ - "
               _ -> "⏳ - "
             end %>
@@ -126,13 +121,7 @@ defmodule DemoTimeWeb.Live.Live3 do
   end
 
   def handle_info(%{topic: "messages", event: "chaos"}, socket) do
-    message = %{
-      id: DateTime.utc_now(),
-      message: Enum.random(@sentences),
-      emotion: :waiting,
-      subject: :waiting
-    }
-
+    message = %{id: DateTime.utc_now(), message: Enum.random(@sentences), emotion: :waiting, subject: :waiting}
     DemoTimeWeb.Endpoint.broadcast("messages", "new_message", {socket.id, message})
     GenServer.cast(self(), {:ml, message})
 
@@ -173,15 +162,16 @@ defmodule DemoTimeWeb.Live.Live3 do
   end
 
   ## Machine Learning
-  def handle_info({_, %{message: message, emotion: emotion, subject: subject}}, socket) do
-    %{predictions: [%{label: emotion} | _]} = emotion
-    %{predictions: [%{label: subject} | _]} = subject
-
-    updated = %{message | emotion: emotion, subject: subject}
-
-    socket = stream_insert(socket, :messages, updated)
-
-    {:noreply, socket}
+  def handle_info(
+        {_,
+         %{
+           message: message,
+           emotion: %{predictions: [%{label: emotion} | _]},
+           subject: %{predictions: [%{label: subject} | _]}
+         }},
+        socket
+      ) do
+    {:noreply, stream_insert(socket, :messages, %{message | emotion: emotion, subject: subject})}
   end
 
   def handle_info(_, socket), do: {:noreply, socket}

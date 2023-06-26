@@ -2,11 +2,9 @@ defmodule DemoTime.Demo1 do
   require Logger
   use GenServer
 
-  def broadcast(topic, message),
-    do: GenServer.cast(:"broadcast_#{topic}", {:broadcast, message})
+  def broadcast(topic, message), do: GenServer.cast(:"broadcast_#{topic}", {:broadcast, message})
 
-  def start_link(topic: topic),
-    do: GenServer.start_link(__MODULE__, %{topic: topic}, name: :"broadcast_#{topic}")
+  def start_link(topic: topic), do: GenServer.start_link(__MODULE__, %{topic: topic}, name: :"broadcast_#{topic}")
 
   @impl true
   def init(state), do: {:ok, state, {:continue, :set_monitors}}
@@ -14,6 +12,7 @@ defmodule DemoTime.Demo1 do
   @impl true
   def handle_continue(:set_monitors, %{topic: topic} = state) do
     connect_nodes()
+    # :pg it's an OTP module
     :pg.join(topic, self())
     Logger.info("Connected to message_queue process group")
     {:noreply, state}

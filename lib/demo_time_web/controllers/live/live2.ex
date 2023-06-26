@@ -5,19 +5,15 @@ defmodule DemoTimeWeb.Live.Live2 do
   alias Avatarex.Sets.Kitty
   alias DemoTimeWeb.Presence
   alias DemoTimeWeb.Monitor
+
   @sentences "sentences.txt" |> File.read!() |> String.split("\n")
 
   def mount(_params, _session, socket) do
     DemoTimeWeb.Endpoint.subscribe("messages")
+    Phoenix.PubSub.subscribe(DemoTime.PubSub, "presence")
 
     if connected?(socket) do
-      Phoenix.PubSub.subscribe(DemoTime.PubSub, "presence")
-
-      online_at =
-        DateTime.utc_now()
-        |> DateTime.truncate(:second)
-        |> Calendar.strftime("%H:%M:%S")
-
+      online_at = DateTime.utc_now() |> Calendar.strftime("%H:%M:%S")
       Presence.track(socket.transport_pid, "presence", socket.id, %{online_at: online_at})
       Monitor.monitor(socket.transport_pid, socket.id)
     end
@@ -103,11 +99,7 @@ defmodule DemoTimeWeb.Live.Live2 do
   end
 
   def handle_info(%{topic: "messages", event: "chaos"}, socket) do
-    message = %{
-      id: DateTime.utc_now(),
-      message: Enum.random(@sentences)
-    }
-
+    message = %{id: DateTime.utc_now(), message: Enum.random(@sentences)}
     DemoTimeWeb.Endpoint.broadcast("messages", "new_message", {socket.id, message})
 
     :timer.sleep(10)

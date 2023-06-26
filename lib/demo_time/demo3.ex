@@ -1,16 +1,20 @@
 defmodule DemoTime.Demo3 do
   require Logger
   alias DemoTime.Docker
+  alias DemoTime.Repo
 
   def go do
     container = Docker.find("demo_time-postgres-1")
-    Logger.info("Found container: #{inspect(container)}")
 
-    Logger.info("Running queries with dead container #{container["Id"]}")
+    Logger.info("Found container: #{inspect(container["Id"])}, killing it in 5 second and start after 1 second down")
+
+    :timer.sleep(5000)
     Docker.kill(container)
     :timer.sleep(1000)
     Logger.info("Starting container #{container["Id"]}")
     Docker.start(container)
+    :timer.sleep(1000)
+    IO.inspect(Repo.all(DemoTime.Thing))
   end
 end
 
